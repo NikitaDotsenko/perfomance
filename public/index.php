@@ -2,7 +2,9 @@
 
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
-
+include '../xhprof/xhprof_lib/config.php';
+include '../xhprof/xhprof_lib/defaults.php';
+include '../xhprof/xhprof_lib/utils/xhprof_runs.php';
 define('LARAVEL_START', microtime(true));
 
 /*
@@ -43,7 +45,7 @@ require __DIR__.'/../vendor/autoload.php';
 | to this client's browser, allowing them to enjoy our application.
 |
 */
-
+xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
 $kernel = $app->make(Kernel::class);
@@ -51,5 +53,9 @@ $kernel = $app->make(Kernel::class);
 $response = tap($kernel->handle(
     $request = Request::capture()
 ))->send();
-
+$xhprof_data = xhprof_disable();
+$xhprof_runs = new XHProfRuns_Default();
+$run_id = $xhprof_runs->save_run($xhprof_data, "xhprof_testing");
+$link = "http://" . $_SERVER['HTTP_HOST'] . "/includes/ExtProcs/debug/xhprof-0.9.2/xhprof_html/index.php?run={$run_id}&source=xhprof_testing\n";
 $kernel->terminate($request, $response);
+

@@ -1,0 +1,38 @@
+version: 1
+creator: xdebug 3.0.1 (PHP 8.0.0)
+cmd: /var/www/html/server.php
+part: 1
+positions: line
+
+events: Time_(10ns) Memory_(bytes)
+
+fl=(1) php:internal
+fn=(1) php::parse_url
+11 880 40
+
+fl=(1)
+fn=(2) php::urldecode
+11 880 40
+
+fl=(1)
+fn=(3) php::file_exists
+17 4890 0
+
+fl=(2) /var/www/html/server.php
+fn=(4) {main}
+1 6430 0
+cfl=(1)
+cfn=(1)
+calls=1 0 0
+11 880 40
+cfl=(1)
+cfn=(2)
+calls=1 0 0
+11 880 40
+cfl=(1)
+cfn=(3)
+calls=1 0 0
+17 4890 0
+
+summary: 24820 353464
+
