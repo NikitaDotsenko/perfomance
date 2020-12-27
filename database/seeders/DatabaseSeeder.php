@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Post;
+use App\Models\PostStatus;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,6 +16,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         \App\Models\User::factory(10)->create();
+         $users = User::factory(10)->create();
+         $this->call(PostStatusSeeder::class);
+         $users->each(function (User $user){
+             Post::factory()
+                 ->count(5)
+                 ->for($user, 'author')
+                 ->for(PostStatus::all()->random(), 'status')
+                 ->create();
+         });
+
     }
 }
